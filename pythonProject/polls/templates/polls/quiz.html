@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <style>
+            body {
+                background:#0f1427;
+                font-family:sans-serif;
+            }
+            .radio {
+                color: green
+            }
+            #link {
+                text-decoration: none;
+                color: white;
+                border: 2px solid #7a5356;
+                padding: 10px;
+                margin-top: 15px;
+                background:#7a5356;
+            }
+            #link:hover {
+                color: white;
+                border: 2px solid green;
+                background:green;
+            }
+            .mainDiv {
+                height: 400px;
+                width: 400px;
+                margin: 100px auto;
+                border: 2px solid #535a7a;
+                text-align: center;
+                box-shadow: 5px 10px 10px black;
+                color:#535a7a;
+                overflow: auto;
+            }
+            .box {
+                margin-top: 50px;
+            }
+            .margin{
+                margin-top: 10px;
+            }
+            .success {
+                color: #00a10f;
+            }
+            .decline {
+                color: red;
+            }
+        </style>
+        <script>
+            function validateForm() {
+              let x = document.forms["myForm"]["radio"].value;
+              if (x == "") {
+                alert("Please select a valid option");
+                return false;
+              }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="mainDiv">
+            <h1>Hello, {{username}} </h1>
+            {% if take_test %}
+            <div>
+                <p>There will be five questions...! Press begin when ready...!</p>
+                <form action="/polls/takeTest" method="post">
+                      {% csrf_token %}
+                    <input type="hidden" id="username" name="username" value="{{username}}" />
+                    <input type="hidden" id="count" name="count" value="{{count}}" />
+                    <input type="submit" value="Start">
+                </form>
+            </div>
+            {% endif %}
+
+            {% if view_all_scores %}
+                <h3>Your all test scores </h3>
+                {% if test_data|length > 0 %}
+                    {% for score in test_data %}
+                        <p><b>Test  {{forloop.counter}}:</b> <i>{{score}}/5</i></p>
+                    {% endfor %}
+                {% else %}
+                    <p><b>You had not taken any test</b></p>
+                {% endif %}
+                <p class="box"><a href="/polls/quizRedirect" id="link">Back</a></p>
+            {% endif %}
+
+            {% if view_average %}
+                <h3> Your test stats </h3>
+                {% if test_data|length > 0 %}
+                    <p>Minimum score: {{test_data.min}}/5</p>
+                    <p>Maximum score: {{test_data.max}}/5</p>
+                    <p>Average score: {{test_data.avg}}/5</p>
+                {% else %}
+                    <p><b>You had not taken any test</b></p>
+                {% endif %}
+                <p class="box"><a href="/polls/quizRedirect" id="link">Back</a></p>
+            {% endif %}
+
+            {% if show_menu %}
+            <div>
+                <form action="/polls/userMenu"  name="myForm"  onsubmit="return validateForm()" method="post">
+                     {% csrf_token %}
+                    <h2>Please select one option</h2>
+                    <h3><input type="radio" name="radio" id="radio0" value="0"> Take Test</h3>
+                    <h3><input type="radio" name="radio" id="radio1" value="1"> View All Score</h3>
+                    <h3><input type="radio" name="radio" id="radio2" value="2"> View Stats(Average)</h3>
+                    <input type="submit" value="Next">
+                </form>
+            </div>
+            {% endif %}
+            <div class="box">
+              <a href="/polls/logoutRedirect" id="link"> logout </a>
+            </div>
+        </div>
+    </body>
+</html>

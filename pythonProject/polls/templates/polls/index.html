@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <style>
+            body {
+                background:#0f1427;
+                font-family:sans-serif;
+            }
+            #link {
+                text-decoration: none;
+                color: #7a5356;
+            }
+            #link:hover {
+                color: #535a7a;
+            }
+            .mainDiv {
+                height: 400px;
+                width: 400px;
+                margin: 100px auto;
+                border: 2px solid #535a7a;
+                text-align: center;
+                box-shadow: 5px 10px 10px black;
+                color:#535a7a;
+            }
+            .margin{
+                margin-top: 10px;
+            }
+            .success {
+                color: #00a10f;
+            }
+            .decline {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="mainDiv">
+            <h1>Please SignIn </h1>
+            <form action="/polls/loginProcess" method="post">
+                 {% csrf_token %}
+                <p class="margin">
+                    <label for="username"> USERNAME </label>
+                    <input id="username" type="text" name="username"/>
+                </p>
+                <p class="margin">
+                    <label for="password"> PASSWORD </label>
+                    <input id="password" type="password" name="password"/>
+                </p>
+                <input type="submit" value="Login"/>
+                {% if authorized %}
+                <p class="success">
+                    {{message}}
+                </p>
+                {% else %}
+                <p class="error">
+                    {{message}}
+                </p>
+                {% endif %}
+            </form>
+            <a href="/polls/registerRedirect" id="link"> No account..! Sign up </a>
+        </div>
+    </body>
+</html>

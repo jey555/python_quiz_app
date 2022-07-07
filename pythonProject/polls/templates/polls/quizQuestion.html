@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <style>
+             body {
+                background:#0f1427;
+                font-family:sans-serif;
+            }
+            .radio {
+                color: green
+            }
+            #link {
+                text-decoration: none;
+                color: white;
+                border: 2px solid #7a5356;
+                padding: 10px;
+                margin-top: 15px;
+                background:#7a5356;
+            }
+            #link:hover {
+                color: white;
+                border: 2px solid green;
+                background:green;
+            }
+            .mainDiv {
+                height: 400px;
+                width: 400px;
+                margin: 100px auto;
+                border: 2px solid #535a7a;
+                text-align: center;
+                box-shadow: 5px 10px 10px black;
+                color:#535a7a;
+            }
+            .box {
+                margin-top: 50px;
+            }
+            .margin{
+                margin-top: 10px;
+            }
+            .success {
+                color: #00a10f;
+            }
+            .decline {
+                color: red;
+            }
+        </style>
+        <script>
+            function validateForm() {
+              let x = document.forms["myForm"]["radio"].value;
+              if (x == "") {
+                alert("Please select atleast one option to continue");
+                return false;
+              }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="mainDiv">
+            <h1>Hello User...! {{username}} </h1>
+            {% if displayQuiz %}
+            <div>
+                <p>There will be five questions...!!</p>
+                <form action="/polls/takeTest" name="myForm"  onsubmit="return validateForm()"  method="post">
+                      {% csrf_token %}
+                        <b> Question : {{question.question}} </b>
+                        {% for options in question.options %}
+                            <p>
+                                <input type="radio" name="radio" id="radio" value="{{ options }}">
+                                {{options}}
+                            </p>
+                        {% endfor %}
+
+                    <input type="hidden" id="username" name="username" value="{{username}}" />
+                    <input type="hidden" id="answer" name="answer" value="{{question.answer}}" />
+                    <input type="hidden" id="count" name="count" value="{{count}}" />
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            {% else %}
+            <div>
+                <p>Quiz Finished...! <br/> Your score: {{correct_answer}}</p>
+                 <b>{{message}}</b>
+                {% if correct_answer < 3 %}
+                    <p  style="margin-top:50px"><a href="/polls/quizRedirect" id="link">Retake test</a></p>
+                {% else %}
+                    <p  style="margin-top:50px"><a href="/polls/quizRedirect" id="link">Main menu</a></p>
+                {% endif %}
+                 <p  style="margin-top:50px"><a href="/polls/logoutRedirect" id="link"> logout </a></p>
+            </div>
+            {% endif %}
+        </div>
+    </body>
+</html>
